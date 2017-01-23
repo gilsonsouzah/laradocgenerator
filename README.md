@@ -177,9 +177,9 @@ $ php artisan api:update
 
 As an optional parameter, you can use `--location` to tell the update command where your documentation can be found.
 
-## Skip single routes
+## Set show routes
 
-If you want to skip a single route from a list of routes that match a given prefix, you can use the `@hideFromAPIDocumentation` tag on the Controller method you do not want to document.
+To add a route from a list of routes that match a given prefix, you can use the `@showInAPIDocumentation` tag on the Controller method you do want to document.
 
 ## Further modification
 

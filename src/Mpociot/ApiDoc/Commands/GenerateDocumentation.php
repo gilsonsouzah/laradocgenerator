@@ -319,11 +319,11 @@ class GenerateDocumentation extends Command
         if ($comment) {
             $phpdoc = new DocBlock($comment);
 
-            return collect($phpdoc->getTags())
+            return (bool) collect($phpdoc->getTags())
                 ->filter(function ($tag) use ($route) {
-                    return $tag->getName() === 'hideFromAPIDocumentation';
+                    return $tag->getName() === 'showInAPIDocumentation';
                 })
-                ->isEmpty();
+                ->count();
         }
 
         return true;
