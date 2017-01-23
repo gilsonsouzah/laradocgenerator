@@ -12,13 +12,18 @@ Automatically generate your API documentation from your existing Laravel routes.
 [![StyleCI](https://styleci.io/repos/57999295/shield)](https://styleci.io/repos/57999295)
 [![Dependency Status](https://www.versioneye.com/php/mpociot:laravel-apidoc-generator/dev-master/badge?style=flat)](https://www.versioneye.com/php/mpociot:laravel-apidoc-generator/dev-master)
 
+## License
+
+This package is a modified version but all rights are retained by its original creator. The original package can be found at:
+
+[mpociot/laravel-apidoc-generator](https://github.com/mpociot/laravel-apidoc-generator)
 
 ## Installation
 
 Require this package with composer using the following command:
 
 ```sh
-$ composer require mpociot/laravel-apidoc-generator
+$ composer require gilsonsouza/laravel-apidoc-generator
 ```
 Go to your `config/app.php` and add the service provider:
 
@@ -99,6 +104,7 @@ class ExampleController extends Controller {
 	 *
 	 * This can be an optional longer description of your API call, used within the documentation.
 	 *
+	 * @showInAPIDocumentation *Add this route to documentarian*
 	 */
 	 public function foo(){
 
@@ -176,10 +182,6 @@ $ php artisan api:update
 ```
 
 As an optional parameter, you can use `--location` to tell the update command where your documentation can be found.
-
-## Set show routes
-
-To add a route from a list of routes that match a given prefix, you can use the `@showInAPIDocumentation` tag on the Controller method you do want to document.
 
 ## Further modification
 

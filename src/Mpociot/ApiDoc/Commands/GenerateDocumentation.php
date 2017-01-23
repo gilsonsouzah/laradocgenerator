@@ -326,7 +326,7 @@ class GenerateDocumentation extends Command
                 ->count();
         }
 
-        return true;
+        return false;
     }
 
     /**
