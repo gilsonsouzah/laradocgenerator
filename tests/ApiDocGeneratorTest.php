@@ -3,13 +3,13 @@
 namespace LaraDocGenerator\Doc\Tests;
 
 use Illuminate\Routing\Route;
-use LaraDocGenerator\Doc\Generators\AbstractGenerator;
-use LaraDocGenerator\Doc\Generators\LaravelGenerator;
 use Orchestra\Testbench\TestCase;
+use Illuminate\Support\Facades\Route as RouteFacade;
 use LaraDocGenerator\Doc\Tests\Fixtures\TestRequest;
+use LaraDocGenerator\Doc\Generators\LaravelGenerator;
+use LaraDocGenerator\Doc\Generators\AbstractGenerator;
 use LaraDocGenerator\Doc\Tests\Fixtures\TestController;
 use LaraDocGenerator\Doc\ApiDocGeneratorServiceProvider;
-use Illuminate\Support\Facades\Route as RouteFacade;
 
 class ApiDocGeneratorTest extends TestCase
 {

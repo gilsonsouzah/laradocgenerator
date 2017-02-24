@@ -19,6 +19,7 @@ class CollectionWriter
 
     /**
      * CollectionWriter constructor.
+     *
      * @param $group
      * @param Collection $routes
      */
@@ -33,7 +34,7 @@ class CollectionWriter
         $collection = [
             'variables' => [],
             'info' => [
-                'name' => ucfirst($this->group)." API Collection",
+                'name' => ucfirst($this->group).' API Collection',
                 '_postman_id' => Uuid::uuid4()->toString(),
                 'description' => '',
                 'schema' => 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json',
@@ -57,12 +58,10 @@ class CollectionWriter
                         ],
                         'description' => $route['description'],
                     ],
-                    'response' => []
+                    'response' => [],
                 ];
             })->toArray(),
         ];
-
-
 
         return json_encode($collection);
     }

@@ -7,7 +7,6 @@ use Illuminate\Routing\Controller;
 
 /**
  * @resource Testes
- * @package LaraDocGenerator\Doc\Tests\Fixtures
  */
 class TestController extends Controller
 {
