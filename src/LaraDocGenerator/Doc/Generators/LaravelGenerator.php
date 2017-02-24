@@ -1,6 +1,6 @@
 <?php
 
-namespace Mpociot\ApiDoc\Generators;
+namespace LaraDocGenerator\Doc\Generators;
 
 use ReflectionClass;
 use Illuminate\Routing\Route;
@@ -17,18 +17,17 @@ class LaravelGenerator extends AbstractGenerator
      */
     protected function getUri($route)
     {
-        return $route->getUri();
+        return $route->uri();
     }
 
     /**
      * @param  \Illuminate\Routing\Route $route
-     * @param array $bindings
      * @param array $headers
      * @param bool $withResponse
      *
      * @return array
      */
-    public function processRoute($route, $bindings = [], $headers = [], $withResponse = true)
+    public function processRoute($route, $headers = [], $withResponse = true)
     {
         $content = '';
 
@@ -37,7 +36,7 @@ class LaravelGenerator extends AbstractGenerator
         $routeDescription = $this->getRouteDescription($routeAction['uses']);
 
         if ($withResponse) {
-            $response = $this->getRouteResponse($route, $bindings, $headers);
+            $response = $this->getRouteResponse($route, $headers);
             if ($response->headers->get('Content-Type') === 'application/json') {
                 $content = json_encode(json_decode($response->getContent()), JSON_PRETTY_PRINT);
             } else {
@@ -46,15 +45,15 @@ class LaravelGenerator extends AbstractGenerator
         }
 
         return $this->getParameters([
-            'id' => md5($route->getUri().':'.implode($route->getMethods())),
+            'id' => md5($route->uri().':'.implode($route->methods())),
             'resource' => $routeGroup,
             'title' => $routeDescription['short'],
             'description' => $routeDescription['long'],
-            'methods' => $route->getMethods(),
-            'uri' => $route->getUri(),
+            'methods' => $route->methods(),
+            'uri' => $this->addRouteModelBindings($route),
             'parameters' => [],
             'response' => $content,
-        ], $routeAction, $bindings);
+        ], $routeAction);
     }
 
     /**
@@ -82,16 +81,28 @@ class LaravelGenerator extends AbstractGenerator
      *
      * @return \Illuminate\Http\Response
      */
-    public function callRoute($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
-    {
+    public function callRoute(
+        $method,
+        $uri,
+        $parameters = [],
+        $cookies = [],
+        $files = [],
+        $server = [],
+        $content = null
+    ) {
         $server = collect([
             'CONTENT_TYPE' => 'application/json',
             'Accept' => 'application/json',
         ])->merge($server)->toArray();
 
         $request = Request::create(
-            $uri, $method, $parameters,
-            $cookies, $files, $this->transformHeadersToServerVars($server), $content
+            $uri,
+            $method,
+            $parameters,
+            $cookies,
+            $files,
+            $this->transformHeadersToServerVars($server),
+            $content
         );
 
         $kernel = App::make('Illuminate\Contracts\Http\Kernel');
@@ -108,12 +119,11 @@ class LaravelGenerator extends AbstractGenerator
     }
 
     /**
-     * @param  string $route
-     * @param  array $bindings
-     *
+     * Retorna as regras e parametros da rota
+     * @param $route string Action da rota
      * @return array
      */
-    protected function getRouteRules($route, $bindings)
+    protected function getRouteRules($route)
     {
         list($class, $method) = explode('@', $route);
         $reflection = new ReflectionClass($class);
@@ -127,9 +137,7 @@ class LaravelGenerator extends AbstractGenerator
                 if (is_subclass_of($className, FormRequest::class)) {
                     $parameterReflection = new $className;
                     $parameterReflection->setContainer(app());
-                    // Add route parameter bindings
-                    $parameterReflection->query->add($bindings);
-                    $parameterReflection->request->add($bindings);
+
 
                     if (method_exists($parameterReflection, 'validator')) {
                         return app()->call([$parameterReflection, 'validator'])

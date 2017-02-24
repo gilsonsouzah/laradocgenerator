@@ -1,13 +1,13 @@
 <?php
 
-namespace Mpociot\ApiDoc\Tests;
+namespace LaraDocGenerator\Doc\Tests;
 
 use Mockery as m;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Translation\Translator;
 use Illuminate\Translation\LoaderInterface;
-use Mpociot\ApiDoc\Parsers\RuleDescriptionParser;
-use Mpociot\ApiDoc\ApiDocGeneratorServiceProvider;
+use LaraDocGenerator\Doc\Parsers\RuleDescriptionParser;
+use LaraDocGenerator\Doc\ApiDocGeneratorServiceProvider;
 
 class RuleDescriptionParserTest extends TestCase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Mpociot\ApiDoc\Tests\Fixtures;
+namespace LaraDocGenerator\Doc\Tests\Fixtures;
 
 use Illuminate\Foundation\Http\FormRequest;
 

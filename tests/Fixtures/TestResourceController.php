@@ -1,6 +1,6 @@
 <?php
 
-namespace Mpociot\ApiDoc\Tests\Fixtures;
+namespace LaraDocGenerator\Doc\Tests\Fixtures;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -11,6 +11,7 @@ class TestResourceController extends Controller
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
+     * @showInAPIDocumentation
      */
     public function index()
     {
@@ -23,6 +24,7 @@ class TestResourceController extends Controller
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
+     * @showInAPIDocumentation
      */
     public function create()
     {
@@ -37,8 +39,9 @@ class TestResourceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      *
      * @return \Illuminate\Http\Response
+     * @showInAPIDocumentation
      */
-    public function store(Request $request)
+    public function store(TestRequest $request)
     {
         return [
             'store_resource' => true,
@@ -51,6 +54,7 @@ class TestResourceController extends Controller
      * @param  int  $id
      *
      * @return \Illuminate\Http\Response
+     * @showInAPIDocumentation
      */
     public function show($id)
     {
@@ -65,6 +69,7 @@ class TestResourceController extends Controller
      * @param  int  $id
      *
      * @return \Illuminate\Http\Response
+     * @showInAPIDocumentation
      */
     public function edit($id)
     {
@@ -80,6 +85,7 @@ class TestResourceController extends Controller
      * @param  int  $id
      *
      * @return \Illuminate\Http\Response
+     * @showInAPIDocumentation
      */
     public function update(Request $request, $id)
     {
@@ -94,6 +100,7 @@ class TestResourceController extends Controller
      * @param  int  $id
      *
      * @return \Illuminate\Http\Response
+     * @showInAPIDocumentation
      */
     public function destroy($id)
     {

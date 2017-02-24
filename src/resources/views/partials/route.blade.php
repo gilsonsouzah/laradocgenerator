@@ -7,7 +7,7 @@
 {!! $parsedRoute['description'] !!}
 @endif
 
-> Example request:
+> Exemplo de requisição:
 
 ```bash
 curl -X {{$parsedRoute['methods'][0]}} "{{config('app.url')}}/{{$parsedRoute['uri']}}" \
@@ -39,7 +39,7 @@ $.ajax(settings).done(function (response) {
 ```
 
 @if(in_array('GET',$parsedRoute['methods']))
-> Example response:
+> Exemplo de retorno:
 
 ```json
 @if(is_object($parsedRoute['response']) || is_array($parsedRoute['response']))
@@ -50,15 +50,15 @@ $.ajax(settings).done(function (response) {
 ```
 @endif
 
-### HTTP Request
+### Rota
 @foreach($parsedRoute['methods'] as $method)
 `{{$method}} {{$parsedRoute['uri']}}`
 
 @endforeach
 @if(count($parsedRoute['parameters']))
-#### Parameters
+#### Parâmetros
 
-Parameter | Type | Status | Description
+Parametro | Tipo | Status | Descrição
 --------- | ------- | ------- | ------- | -----------
 @foreach($parsedRoute['parameters'] as $attribute => $parameter)
     {{$attribute}} | {{$parameter['type']}} | @if($parameter['required']) required @else optional @endif | {!! implode(' ',$parameter['description']) !!}

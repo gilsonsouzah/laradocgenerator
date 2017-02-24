@@ -1,10 +1,14 @@
 <?php
 
-namespace Mpociot\ApiDoc\Tests\Fixtures;
+namespace LaraDocGenerator\Doc\Tests\Fixtures;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
+/**
+ * @resource Testes
+ * @package LaraDocGenerator\Doc\Tests\Fixtures
+ */
 class TestController extends Controller
 {
     public function dummy()
@@ -16,27 +20,41 @@ class TestController extends Controller
      * Example title.
      * This will be the long description.
      * It can also be multiple lines long.
+     *
+     * @showInAPIDocumentation
      */
     public function parseMethodDescription()
     {
         return '';
     }
 
+    /**
+     * @showInAPIDocumentation
+     */
     public function parseFormRequestRules(TestRequest $request)
     {
         return '';
     }
 
+    /**
+     * @showInAPIDocumentation
+     */
     public function addRouteBindingsToRequestClass(DynamicRequest $request)
     {
         return '';
     }
 
+    /**
+     * @showInAPIDocumentation
+     */
     public function checkCustomHeaders(Request $request)
     {
-        return $request->headers->all();
+        return $request->header();
     }
 
+    /**
+     * @showInAPIDocumentation
+     */
     public function fetchRouteResponse()
     {
         $fixture = new \stdClass();
@@ -55,17 +73,23 @@ class TestController extends Controller
         ];
     }
 
+    /**
+     * @showInAPIDocumentation
+     */
     public function dependencyInjection(DependencyInjection $dependency, TestRequest $request)
     {
         return '';
     }
 
+    /**
+     * @showInAPIDocumentation
+     */
     public function utf8()
     {
         return ['result' => 'Лорем ипсум долор сит амет'];
     }
 
-    /**
+    /***
      * @hideFromAPIDocumentation
      */
     public function skip()

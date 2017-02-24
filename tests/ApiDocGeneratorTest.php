@@ -1,19 +1,20 @@
 <?php
 
-namespace Mpociot\ApiDoc\Tests;
+namespace LaraDocGenerator\Doc\Tests;
 
 use Illuminate\Routing\Route;
+use LaraDocGenerator\Doc\Generators\AbstractGenerator;
+use LaraDocGenerator\Doc\Generators\LaravelGenerator;
 use Orchestra\Testbench\TestCase;
-use Mpociot\ApiDoc\Tests\Fixtures\TestRequest;
-use Mpociot\ApiDoc\Generators\LaravelGenerator;
-use Mpociot\ApiDoc\Tests\Fixtures\TestController;
-use Mpociot\ApiDoc\ApiDocGeneratorServiceProvider;
+use LaraDocGenerator\Doc\Tests\Fixtures\TestRequest;
+use LaraDocGenerator\Doc\Tests\Fixtures\TestController;
+use LaraDocGenerator\Doc\ApiDocGeneratorServiceProvider;
 use Illuminate\Support\Facades\Route as RouteFacade;
 
 class ApiDocGeneratorTest extends TestCase
 {
     /**
-     * @var \Mpociot\ApiDoc\AbstractGenerator
+     * @var AbstractGenerator
      */
     protected $generator;
 
@@ -41,7 +42,10 @@ class ApiDocGeneratorTest extends TestCase
         $parsed = $this->generator->processRoute($route);
 
         $this->assertSame('Example title.', $parsed['title']);
-        $this->assertSame("This will be the long description.\nIt can also be multiple lines long.", $parsed['description']);
+        $this->assertSame(
+            "This will be the long description.\nIt can also be multiple lines long.",
+            $parsed['description']
+        );
     }
 
     public function testCanParseRouteMethods()
@@ -90,7 +94,6 @@ class ApiDocGeneratorTest extends TestCase
             $attribute = $parameters[$name];
 
             switch ($name) {
-
                 case 'required':
                     $this->assertTrue($attribute['required']);
                     $this->assertSame('string', $attribute['type']);
@@ -116,7 +119,10 @@ class ApiDocGeneratorTest extends TestCase
                     $this->assertFalse($attribute['required']);
                     $this->assertSame('string', $attribute['type']);
                     $this->assertCount(1, $attribute['description']);
-                    $this->assertSame('Allowed: alpha-numeric characters, as well as dashes and underscores.', $attribute['description'][0]);
+                    $this->assertSame(
+                        'Allowed: alpha-numeric characters, as well as dashes and underscores.',
+                        $attribute['description'][0]
+                    );
                     break;
                 case 'alpha_num':
                     $this->assertFalse($attribute['required']);
@@ -145,7 +151,10 @@ class ApiDocGeneratorTest extends TestCase
                     $this->assertFalse($attribute['required']);
                     $this->assertSame('date', $attribute['type']);
                     $this->assertCount(1, $attribute['description']);
-                    $this->assertSame('Must be a date preceding: `Saturday, 23-Apr-16 14:31:00 UTC`', $attribute['description'][0]);
+                    $this->assertSame(
+                        'Must be a date preceding: `Saturday, 23-Apr-16 14:31:00 UTC`',
+                        $attribute['description'][0]
+                    );
                     break;
                 case 'boolean':
                     $this->assertFalse($attribute['required']);
@@ -167,7 +176,10 @@ class ApiDocGeneratorTest extends TestCase
                     $this->assertFalse($attribute['required']);
                     $this->assertSame('string', $attribute['type']);
                     $this->assertCount(1, $attribute['description']);
-                    $this->assertSame('Must have a different value than parameter: `alpha_num`', $attribute['description'][0]);
+                    $this->assertSame(
+                        'Must have a different value than parameter: `alpha_num`',
+                        $attribute['description'][0]
+                    );
                     break;
                 case 'digits':
                     $this->assertFalse($attribute['required']);
@@ -289,25 +301,37 @@ class ApiDocGeneratorTest extends TestCase
                     $this->assertFalse($attribute['required']);
                     $this->assertSame('string', $attribute['type']);
                     $this->assertCount(1, $attribute['description']);
-                    $this->assertSame('Required if the parameters `foo`, `bar` or `baz` are present.', $attribute['description'][0]);
+                    $this->assertSame(
+                        'Required if the parameters `foo`, `bar` or `baz` are present.',
+                        $attribute['description'][0]
+                    );
                     break;
                 case 'required_with_all':
                     $this->assertFalse($attribute['required']);
                     $this->assertSame('string', $attribute['type']);
                     $this->assertCount(1, $attribute['description']);
-                    $this->assertSame('Required if the parameters `foo`, `bar` and `baz` are present.', $attribute['description'][0]);
+                    $this->assertSame(
+                        'Required if the parameters `foo`, `bar` and `baz` are present.',
+                        $attribute['description'][0]
+                    );
                     break;
                 case 'required_without':
                     $this->assertFalse($attribute['required']);
                     $this->assertSame('string', $attribute['type']);
                     $this->assertCount(1, $attribute['description']);
-                    $this->assertSame('Required if the parameters `foo`, `bar` or `baz` are not present.', $attribute['description'][0]);
+                    $this->assertSame(
+                        'Required if the parameters `foo`, `bar` or `baz` are not present.',
+                        $attribute['description'][0]
+                    );
                     break;
                 case 'required_without_all':
                     $this->assertFalse($attribute['required']);
                     $this->assertSame('string', $attribute['type']);
                     $this->assertCount(1, $attribute['description']);
-                    $this->assertSame('Required if the parameters `foo`, `bar` and `baz` are not present.', $attribute['description'][0]);
+                    $this->assertSame(
+                        'Required if the parameters `foo`, `bar` and `baz` are not present.',
+                        $attribute['description'][0]
+                    );
                     break;
                 case 'same':
                     $this->assertFalse($attribute['required']);

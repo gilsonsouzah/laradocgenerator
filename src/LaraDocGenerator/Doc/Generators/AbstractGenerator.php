@@ -1,6 +1,6 @@
 <?php
 
-namespace Mpociot\ApiDoc\Generators;
+namespace LaraDocGenerator\Doc\Generators;
 
 use Faker\Factory;
 use ReflectionClass;
@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 use Mpociot\Reflection\DocBlock;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Mpociot\ApiDoc\Parsers\RuleDescriptionParser as Description;
+use LaraDocGenerator\Doc\Parsers\RuleDescriptionParser as Description;
 
 abstract class AbstractGenerator
 {
@@ -22,12 +22,11 @@ abstract class AbstractGenerator
 
     /**
      * @param  \Illuminate\Routing\Route $route
-     * @param array $bindings
      * @param bool $withResponse
      *
      * @return array
      */
-    abstract public function processRoute($route, $bindings = [], $withResponse = true);
+    abstract public function processRoute($route, $withResponse = true);
 
     /**
      * Prepares / Disables route middlewares.
@@ -41,13 +40,12 @@ abstract class AbstractGenerator
     /**
      * @param array $routeData
      * @param array $routeAction
-     * @param array $bindings
      *
      * @return mixed
      */
-    protected function getParameters($routeData, $routeAction, $bindings)
+    protected function getParameters($routeData, $routeAction)
     {
-        $validator = Validator::make([], $this->getRouteRules($routeAction['uses'], $bindings));
+        $validator = Validator::make([], $this->getRouteRules($routeAction['uses']));
         foreach ($validator->getRules() as $attribute => $rules) {
             $attributeData = [
                 'required' => false,
@@ -67,16 +65,15 @@ abstract class AbstractGenerator
 
     /**
      * @param  $route
-     * @param  $bindings
      * @param  $headers
      *
      * @return \Illuminate\Http\Response
      */
-    protected function getRouteResponse($route, $bindings, $headers = [])
+    protected function getRouteResponse($route, $headers = [])
     {
-        $uri = $this->addRouteModelBindings($route, $bindings);
+        $uri = $this->addRouteModelBindings($route);
 
-        $methods = $route->getMethods();
+        $methods = $route->methods();
 
         // Split headers into key - value pairs
         $headers = collect($headers)->map(function ($value) {
@@ -85,24 +82,18 @@ abstract class AbstractGenerator
             return [trim($split[0]) => trim($split[1])];
         })->collapse()->toArray();
 
-        //Changes url with parameters like /users/{user} to /users/1
-        $uri = preg_replace('/{(.*)}/', 1, $uri);
-
         return $this->callRoute(array_shift($methods), $uri, [], [], [], $headers);
     }
 
     /**
      * @param $route
-     * @param array $bindings
      *
      * @return mixed
      */
-    protected function addRouteModelBindings($route, $bindings)
+    protected function addRouteModelBindings($route)
     {
         $uri = $this->getUri($route);
-        foreach ($bindings as $model => $id) {
-            $uri = str_replace('{'.$model.'}', $id, $uri);
-        }
+        $uri = preg_replace('/({+\w+})/', '{id}', $uri);
 
         return $uri;
     }
@@ -132,7 +123,7 @@ abstract class AbstractGenerator
      *
      * @return string
      */
-    protected function getRouteGroup($route)
+    public function getRouteGroup($route)
     {
         list($class, $method) = explode('@', $route);
         $reflection = new ReflectionClass($class);
@@ -146,16 +137,15 @@ abstract class AbstractGenerator
             }
         }
 
-        return 'general';
+        return 'General';
     }
 
     /**
      * @param  $route
-     * @param  array $bindings
      *
      * @return array
      */
-    protected function getRouteRules($route, $bindings)
+    protected function getRouteRules($route)
     {
         list($class, $method) = explode('@', $route);
         $reflection = new ReflectionClass($class);
@@ -168,9 +158,6 @@ abstract class AbstractGenerator
 
                 if (is_subclass_of($className, FormRequest::class)) {
                     $parameterReflection = new $className;
-                    // Add route parameter bindings
-                    $parameterReflection->query->add($bindings);
-                    $parameterReflection->request->add($bindings);
 
                     if (method_exists($parameterReflection, 'validator')) {
                         return $parameterReflection->validator()->getRules();
@@ -447,7 +434,6 @@ abstract class AbstractGenerator
 
             $server[$name] = $value;
         }
-
         return $server;
     }
 

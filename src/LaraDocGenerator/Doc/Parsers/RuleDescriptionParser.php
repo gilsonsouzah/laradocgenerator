@@ -1,6 +1,6 @@
 <?php
 
-namespace Mpociot\ApiDoc\Parsers;
+namespace LaraDocGenerator\Doc\Parsers;
 
 class RuleDescriptionParser
 {
@@ -8,7 +8,7 @@ class RuleDescriptionParser
 
     private $parameters = [];
 
-    const DEFAULT_LOCALE = 'en';
+    const DEFAULT_LOCALE = 'pt_BR';
 
     /**
      * @param null $rule

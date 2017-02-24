@@ -1,16 +1,8 @@
 ## Laravel API Documentation Generator
 
-Automatically generate your API documentation from your existing Laravel routes. Take a look at the [example documentation](http://marcelpociot.de/whiteboard/).
+Automatically generate your API documentation from your existing Laravel routes.
 
-`php artisan api:gen --routePrefix="settings/api/*"`
-
-![image](http://img.shields.io/packagist/v/mpociot/laravel-apidoc-generator.svg?style=flat)
-![image](http://img.shields.io/packagist/l/mpociot/laravel-apidoc-generator.svg?style=flat)
-[![codecov.io](https://codecov.io/github/mpociot/laravel-apidoc-generator/coverage.svg?branch=master)](https://codecov.io/github/mpociot/laravel-apidoc-generator?branch=master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mpociot/laravel-apidoc-generator/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mpociot/laravel-apidoc-generator/?branch=master)
-[![Build Status](https://travis-ci.org/mpociot/laravel-apidoc-generator.svg?branch=master)](https://travis-ci.org/mpociot/laravel-apidoc-generator)
-[![StyleCI](https://styleci.io/repos/57999295/shield)](https://styleci.io/repos/57999295)
-[![Dependency Status](https://www.versioneye.com/php/mpociot:laravel-apidoc-generator/dev-master/badge?style=flat)](https://www.versioneye.com/php/mpociot:laravel-apidoc-generator/dev-master)
+`php artisan api:gen --routePrefix="api/*"`
 
 ## License
 
@@ -28,7 +20,7 @@ $ composer require gilsonsouza/laravel-apidoc-generator
 Go to your `config/app.php` and add the service provider:
 
 ```php
-Mpociot\ApiDoc\ApiDocGeneratorServiceProvider::class,
+LaraDocGenerator\Doc\ApiDocGeneratorServiceProvider::class,
 ```
 
 ## Usage
@@ -36,14 +28,14 @@ Mpociot\ApiDoc\ApiDocGeneratorServiceProvider::class,
 To generate your API documentation, use the `api:generate` artisan command.
 
 ```sh
-$ php artisan api:generate --routePrefix="api/v1/*"
+$ php artisan api:generate --routePrefix="api/*"
 ```
 
-This command will scan your applications routes for the URIs matching `api/v1/*` and will parse these controller methods and form requests. For example:
+This command will scan your applications routes for the URIs matching `api/*` and will parse these controller methods and form requests. For example:
 
 ```php
 // API Group Routes
-Route::group(array('prefix' => 'api/v1', 'middleware' => []), function () {
+Route::group(array('prefix' => 'api', 'middleware' => []), function () {
 	// Custom route added to standard Resource
 	Route::get('example/foo', 'ExampleController@foo');
 	// Standard Resource route
@@ -182,10 +174,6 @@ $ php artisan api:update
 ```
 
 As an optional parameter, you can use `--location` to tell the update command where your documentation can be found.
-
-## Further modification
-
-This package uses [Documentarian](https://github.com/mpociot/documentarian) to generate the API documentation. If you want to modify the CSS files of your documentation, or simply want to learn more about what is possible, take a look at the [Documentarian guide](http://marcelpociot.de/documentarian/installation).
 
 ### License
 
