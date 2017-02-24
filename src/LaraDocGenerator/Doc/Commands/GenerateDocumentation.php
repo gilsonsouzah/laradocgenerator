@@ -2,16 +2,16 @@
 
 namespace LaraDocGenerator\Doc\Commands;
 
+use ReflectionClass;
 use Illuminate\Console\Command;
-use Illuminate\Routing\RouteCollection;
+use Mpociot\Reflection\DocBlock;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
-use LaraDocGenerator\Doc\Generators\AbstractGenerator;
-use LaraDocGenerator\Doc\Generators\LaravelGenerator;
-use LaraDocGenerator\Doc\Postman\CollectionWriter;
+use Illuminate\Routing\RouteCollection;
 use Mpociot\Documentarian\Documentarian;
-use Mpociot\Reflection\DocBlock;
-use ReflectionClass;
+use LaraDocGenerator\Doc\Postman\CollectionWriter;
+use LaraDocGenerator\Doc\Generators\LaravelGenerator;
+use LaraDocGenerator\Doc\Generators\AbstractGenerator;
 
 class GenerateDocumentation extends Command
 {
@@ -61,7 +61,7 @@ class GenerateDocumentation extends Command
         $routePrefix = $this->option('routePrefix');
         $middleware = $this->option('middleware');
 
-        if ($routePrefix === null && !count($allowedRoutes) && $middleware === null) {
+        if ($routePrefix === null && ! count($allowedRoutes) && $middleware === null) {
             $this->error('Informe uma rota ou prefixo para geração da documentação.');
         }
 
@@ -69,7 +69,6 @@ class GenerateDocumentation extends Command
 
         $parsedRoutes = $this->processLaravelRoutes($generator, $allowedRoutes, $routePrefix, $middleware);
         $parsedRoutes = collect($parsedRoutes)->groupBy('resource')->sort(function ($a, $b) {
-
             return strcmp($a->first()['resource'], $b->first()['resource']);
         });
 
@@ -77,11 +76,13 @@ class GenerateDocumentation extends Command
     }
 
     /**
-     * Processa as rotas do laravel e gera a documentação da rota
+     * Processa as rotas do laravel e gera a documentação da rota.
+     *
      * @param AbstractGenerator $generator Laravel Generator
      * @param $allowedRoutes array Rotas permitidas na geração da documentação
      * @param $routePrefix string Prefixo de rotas a serem geradas
      * @param $middleware array Middlewares a serem inicializados
+     *
      * @return array
      */
     private function processLaravelRoutes(AbstractGenerator $generator, $allowedRoutes, $routePrefix, $middleware)
@@ -97,15 +98,15 @@ class GenerateDocumentation extends Command
                     $this->isRouteVisibleForDocumentation($route->getAction()['uses'])
                 ) {
                     $parsedRoutes[] = $generator->processRoute($route, $this->option('header'));
-                    $this->info('Rota processada: [' . implode(
+                    $this->info('Rota processada: ['.implode(
                         ',',
                         $route->methods()
-                    ) . '] ' . $this->addRouteModelBindings($route));
+                    ).'] '.$this->addRouteModelBindings($route));
                 } else {
-                    $this->warn('Rota ignorada: [' . implode(
+                    $this->warn('Rota ignorada: ['.implode(
                         ',',
                         $route->methods()
-                    ) . '] ' . $this->addRouteModelBindings($route));
+                    ).'] '.$this->addRouteModelBindings($route));
                 }
             }
         }
@@ -114,7 +115,8 @@ class GenerateDocumentation extends Command
     }
 
     /**
-     * Retorna as rotas
+     * Retorna as rotas.
+     *
      * @return RouteCollection
      */
     private function getRoutes()
@@ -123,18 +125,22 @@ class GenerateDocumentation extends Command
     }
 
     /**
-     * Verifica se a rota é aplicavel a documentação
+     * Verifica se a rota é aplicavel a documentação.
+     *
      * @param $route Route rota atual
+     *
      * @return bool
      */
     private function isValidRoute($route)
     {
-        return !is_callable($route->getAction()['uses']) && !is_null($route->getAction()['uses']);
+        return ! is_callable($route->getAction()['uses']) && ! is_null($route->getAction()['uses']);
     }
 
     /**
-     * Verifica se a rota é visivel para a documentação
+     * Verifica se a rota é visivel para a documentação.
+     *
      * @param $route string Rota
+     *
      * @return bool
      */
     private function isRouteVisibleForDocumentation($route)
@@ -145,7 +151,7 @@ class GenerateDocumentation extends Command
         if ($comment) {
             $phpdoc = new DocBlock($comment);
 
-            return (bool)collect($phpdoc->getTags())
+            return (bool) collect($phpdoc->getTags())
                 ->filter(function ($tag) use ($route) {
                     return $tag->getName() === 'showInAPIDocumentation';
                 })
@@ -163,20 +169,20 @@ class GenerateDocumentation extends Command
     private function writeMarkdown($parsedRoutes)
     {
         $outputPath = $this->option('output');
-        $docDirectory = $outputPath . DIRECTORY_SEPARATOR . 'source' . DIRECTORY_SEPARATOR;
+        $docDirectory = $outputPath.DIRECTORY_SEPARATOR.'source'.DIRECTORY_SEPARATOR;
 
         $documentarian = new Documentarian();
-        if (!is_dir($outputPath.'/assets')) {
+        if (! is_dir($outputPath.'/assets')) {
             $documentarian->create($outputPath);
         }
 
-        if (!is_dir($docDirectory.'/groups')) {
+        if (! is_dir($docDirectory.'/groups')) {
             mkdir($docDirectory.'/groups');
         }
 
         $parsedRouteOutput = $parsedRoutes->map(function ($routeGroup) {
             return $routeGroup->map(function ($route) {
-                $route['output'] = (string)view('apidoc::partials.route')->with('parsedRoute', $route);
+                $route['output'] = (string) view('apidoc::partials.route')->with('parsedRoute', $route);
 
                 return $route;
             });
@@ -185,8 +191,7 @@ class GenerateDocumentation extends Command
         foreach ($parsedRouteOutput as $group => $routes) {
             $this->info("Processando o grupo {$group}");
 
-
-            $targetFile = $docDirectory . 'groups' . DIRECTORY_SEPARATOR . $group;
+            $targetFile = $docDirectory.'groups'.DIRECTORY_SEPARATOR.$group;
 
             $groupMarkdown = view('apidoc::partials.group')
                 ->with('group', $group)
@@ -201,28 +206,28 @@ class GenerateDocumentation extends Command
 
                 $routes = $routes->transform(function ($route) use ($groupMarkdown, $compareDocumentation) {
                     if (preg_match(
-                        '/<!-- START_' . $route['id'] . ' -->(.*)<!-- END_' . $route['id'] . ' -->/is',
+                        '/<!-- START_'.$route['id'].' -->(.*)<!-- END_'.$route['id'].' -->/is',
                         $groupMarkdown,
                         $routeMatch
                     )) {
                         $routeDocumentationChanged = (
                             preg_match(
-                                '/<!-- START_' . $route['id'] . ' -->(.*)<!-- END_' . $route['id'] . ' -->/is',
+                                '/<!-- START_'.$route['id'].' -->(.*)<!-- END_'.$route['id'].' -->/is',
                                 $compareDocumentation,
                                 $compareMatch
                             ) && $compareMatch[1] !== $routeMatch[1]);
                         if ($routeDocumentationChanged === false || $this->option('force')) {
                             if ($routeDocumentationChanged) {
-                                $this->warn('Sobrescrevendo alterações manuais em  [' . implode(
+                                $this->warn('Sobrescrevendo alterações manuais em  ['.implode(
                                     ',',
                                     $route['methods']
-                                ) . '] ' . $route['uri']);
+                                ).'] '.$route['uri']);
                             }
                         } else {
-                            $this->warn('Ignorando rota modificada manualmente [' . implode(
+                            $this->warn('Ignorando rota modificada manualmente ['.implode(
                                 ',',
                                 $route['methods']
-                            ) . '] ' . $route['uri']);
+                            ).'] '.$route['uri']);
 
                             $route['output'] = $compareMatch[0];
                         }
@@ -247,9 +252,11 @@ class GenerateDocumentation extends Command
     }
 
     /**
-     * Gera a coleção do postman das rotas processadas na documentação
+     * Gera a coleção do postman das rotas processadas na documentação.
+     *
      * @param $group string Grupo de rotas
      * @param $routes Collection Rotas
+     *
      * @return string
      */
     private function generatePostmanCollection($group, $routes)
@@ -260,8 +267,10 @@ class GenerateDocumentation extends Command
     }
 
     /**
-     * Adiciona os models bindings na rota
+     * Adiciona os models bindings na rota.
+     *
      * @param $route
+     *
      * @return mixed
      */
     private function addRouteModelBindings($route)

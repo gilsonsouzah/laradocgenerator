@@ -3,8 +3,8 @@
 namespace LaraDocGenerator\Doc\Commands;
 
 use Illuminate\Console\Command;
-use Mpociot\Documentarian\Documentarian;
 use Symfony\Component\Finder\Finder;
+use Mpociot\Documentarian\Documentarian;
 
 class UpdateDocumentation extends Command
 {
@@ -61,7 +61,6 @@ class UpdateDocumentation extends Command
             ->with('infoText', $infoText)
             ->with('groups', $groupsDataContent)
             ->render();
-
 
         // Write output file
         file_put_contents($outputPath.DIRECTORY_SEPARATOR.'source'.DIRECTORY_SEPARATOR.'index.md', $markDownFile);

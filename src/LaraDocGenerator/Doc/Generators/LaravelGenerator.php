@@ -119,8 +119,10 @@ class LaravelGenerator extends AbstractGenerator
     }
 
     /**
-     * Retorna as regras e parametros da rota
+     * Retorna as regras e parametros da rota.
+     *
      * @param $route string Action da rota
+     *
      * @return array
      */
     protected function getRouteRules($route)
@@ -137,7 +139,6 @@ class LaravelGenerator extends AbstractGenerator
                 if (is_subclass_of($className, FormRequest::class)) {
                     $parameterReflection = new $className;
                     $parameterReflection->setContainer(app());
-
 
                     if (method_exists($parameterReflection, 'validator')) {
                         return app()->call([$parameterReflection, 'validator'])

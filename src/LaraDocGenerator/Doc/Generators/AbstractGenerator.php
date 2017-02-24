@@ -434,6 +434,7 @@ abstract class AbstractGenerator
 
             $server[$name] = $value;
         }
+
         return $server;
     }
 

@@ -3,8 +3,8 @@
 namespace LaraDocGenerator\Doc;
 
 use Illuminate\Support\ServiceProvider;
-use LaraDocGenerator\Doc\Commands\GenerateDocumentation;
 use LaraDocGenerator\Doc\Commands\UpdateDocumentation;
+use LaraDocGenerator\Doc\Commands\GenerateDocumentation;
 
 class ApiDocGeneratorServiceProvider extends ServiceProvider
 {
@@ -46,7 +46,8 @@ class ApiDocGeneratorServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register Laravel Shared Binginds according with Laravel version
+     * Register Laravel Shared Binginds according with Laravel version.
+     *
      * @param $abstractName string Abstract binging name
      * @param callable $concreteObject Concrete object value
      */

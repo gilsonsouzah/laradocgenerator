@@ -2,15 +2,13 @@
 
 namespace LaraDocGenerator\Doc\Tests;
 
-use Illuminate\Routing\Route;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Contracts\Console\Kernel;
 use Dingo\Api\Provider\LaravelServiceProvider;
+use Illuminate\Support\Facades\Route as RouteFacade;
 use LaraDocGenerator\Doc\Generators\LaravelGenerator;
 use LaraDocGenerator\Doc\Tests\Fixtures\TestController;
 use LaraDocGenerator\Doc\ApiDocGeneratorServiceProvider;
-use Illuminate\Support\Facades\Route as RouteFacade;
-use LaraDocGenerator\Doc\Tests\Fixtures\DingoTestController;
 use LaraDocGenerator\Doc\Tests\Fixtures\TestResourceController;
 
 class GenerateDocumentationTest extends TestCase
